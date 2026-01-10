@@ -1,16 +1,9 @@
 return {
-  "folke/tokyonight.nvim",
-  priority = 1000,
-  config = function()
-    local transparent = false --this messes up the colours idk why
-
-    require("tokyonight").setup({
-      style = "night",
-      transparent = transparent,
-      styles = {
-        sidebars = transparent and "transparent" or "dark",
-        floats = transparent and "transparent" or "dark",
-      },
-    })
-    end,
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    opts = {
+        flavour = "mocha",
+        transparent = true
+    }
 }
