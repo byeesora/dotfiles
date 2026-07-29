@@ -19,8 +19,6 @@
 # See https://wiki.hyprland.org/Configuring/Monitors/
 
 monitor =, 1920x1080@144, 0x0, 1
-
-
 ###################
 ### MY PROGRAMS ###
 ###################
@@ -30,8 +28,7 @@ monitor =, 1920x1080@144, 0x0, 1
 # Set programs that you use
 $terminal = kitty
 $fileManager = thunar 
-$ipc = qs -c noctalia-shell ipc call
-$menu = $ipc launcher toggle
+$ipc = noctalia msg
 $browser = firefox
 
 cursor {
@@ -46,11 +43,8 @@ exec = xsettingsd &
 # Autostart necessary processes (like notifications daemons, status bars, etc.)
 # Or execute your favorite apps at launch like this:
 
-# exec-once = $terminal
-exec-once = qs -c noctalia-shell --no-duplicate
+exec-once = noctalia
 exec-once = clipse -listen
-exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-exec-once = systemctl --user start hyprpolkitagent
 
 #############################
 ### ENVIRONMENT VARIABLES ###
@@ -106,6 +100,8 @@ layerrule {
   blur_popups = true
 }
 
+env = ELECTRON_OZONE_PLATFORM_HINT , auto
+
 animations {
     enabled = yes, please :)
         bezier = wind, 0.05, 0.9, 0.1, 1.05
@@ -136,7 +132,6 @@ animations {
 }
 
 dwindle {
-    pseudotile = true 
     preserve_split = true 
 }
 
@@ -164,14 +159,20 @@ input {
     kb_model =
     kb_options =
     kb_rules =
+    accel_profile=flat
+    follow_mouse=1
+    force_no_accel=0
 
-    follow_mouse = 1
-
-    sensitivity = 0.2 # -1.0 - 1.0, 0 means no modification.
 
     touchpad {
         natural_scroll = true
     }
+}
+
+
+device {
+    name = foca0001:00-2808:0106-touchpad
+    sensitivity = 0.7
 }
 
 # https://wiki.hyprland.org/Configuring/Variables/#gestures
@@ -179,10 +180,6 @@ gesture = 3, horizontal, workspace
 
 # Example per-device config
 # See https://wiki.hyprland.org/Configuring/Keywords/#per-device-input-configs for more
-device {
-    name = epic-mouse-v1
-    sensitivity = -0.5
-}
 
 
 ###################
@@ -190,19 +187,16 @@ device {
 ###################
 
 # See https://wiki.hyprland.org/Configuring/Keywords/
-$mainMod = ALT # Sets "Windows" key as main modifier
+$mainMod = ALT
 
 # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
 bind = $mainMod, Q, exec, $terminal
 bind = $mainMod, C, killactive,
 bind = $mainMod, E, exec, $fileManager
 bind = $mainMod, V, togglefloating,
-bind = $mainMod, R, exec, $menu
 bind = $mainMod, D, exec, $browser
-bind = $mainMod, H, togglesplit, # dwindle
 bind = $mainMod, F, fullscreen,
 bind = $mainMod, P, exec, quickshell -c hyprquickshot -n
-bind = $mainMod, N, exec, swaync-client --toggle-panel
 # Move focus with mainMod + Vim keys 
 bind = $mainMod, J, movefocus, l
 bind = $mainMod, ccedilla, movefocus, r
@@ -219,6 +213,7 @@ bind = $mainMod SHIFT, H, movewindow, l
 bind = $mainMod SHIFT, J, movewindow, u
 bind = $mainMod SHIFT, K, movewindow, d
 bind = $mainMod SHIFT, L, movewindow, r
+
 # Switch workspaces with mainMod + [0-9]
 bind = $mainMod, 1, workspace, 1
 bind = $mainMod, 2, workspace, 2
@@ -252,11 +247,11 @@ bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
 
 
-# Requires playerctl
 # Core binds
 bind = SUPER, SPACE, exec, $ipc launcher toggle
 bind = SUPER, S, exec, $ipc controlCenter toggle
 bind = SUPER, comma, exec, $ipc settings toggle
+bind = $mainMod, R, exec, $ipc panel-toggle launcher
 
 # Media keys
 bindel = , XF86AudioRaiseVolume, exec, $ipc volume increase
